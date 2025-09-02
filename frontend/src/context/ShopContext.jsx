@@ -1,18 +1,33 @@
-import { createContext, useState } from "react";
-import { products } from "../assets/assets";
+import { createContext, useEffect, useState } from "react";
+// import { products } from "../assets/assets";
 import { toast } from "react-toastify";
 import { useLocation, useNavigate } from "react-router-dom";
+import { backendUrl } from "../App";
+import axios from "axios";
+// import "dotenv/config.js";
 
 export const ShopContext = createContext();
 
 const ShopContextProvider = ({ children }) => {
   const currency = "$";
   const delivery_fee = 10;
+  const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [showSearch, setShowSearch] = useState(false);
   const [cartItems, setCartItems] = useState({});
   const navigate = useNavigate();
   const path = useLocation();
+  const backendUrl = "http://localhost:4000";
+
+  useEffect(() => {
+    (async () => {
+      const response = await axios.get(backendUrl + "/api/v1/products/list");
+      console.log(backendUrl);
+      console.log(response.data);
+      setProducts(response.data.products);
+    })();
+  }, []);
+
   const addToCart = async (itemId, size) => {
     if (!size) {
       toast.error("Select Product Size");

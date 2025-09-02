@@ -3,9 +3,9 @@ import { ShopContext } from "../context/ShopContext.jsx";
 import { assets } from "../assets/assets.js";
 import Title from "../components/Title.jsx";
 import ProductItem from "../components/ProductItem.jsx";
-
 const Collection = () => {
   // states
+
   const { products, search, showSearch } = useContext(ShopContext);
   const [showFilter, setShowFilter] = useState(true);
   const [filterProducts, setFilterProducts] = useState([]);
