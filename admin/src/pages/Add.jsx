@@ -206,7 +206,6 @@ const Add = ({ token }) => {
           />
         </div>
       </div>
-
       <div>
         <p className="mb-2">Product Sizes</p>
         <div className="flex gap-3">
@@ -223,7 +222,6 @@ const Add = ({ token }) => {
           ))}
         </div>
       </div>
-
       <div className="flex gap-2 mt-2">
         <input
           onChange={() => setBestseller((prev) => !prev)}

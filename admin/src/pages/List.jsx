@@ -73,7 +73,7 @@ const List = ({ token }) => {
               {item.price}
             </p>
             <p
-              className="text-right md:text-center cursor-pointer text-lg"
+              className="text-center  cursor-pointer text-lg  col-start-3 md:col-start-5 col-span-1"
               onClick={() => removeProduct(item._id)}
             >
               X
