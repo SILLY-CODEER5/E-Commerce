@@ -4,7 +4,7 @@ import { assets } from "../assets/assets";
 const About = () => {
   return (
     <div>
-      <div className="text-2xl text-center pt-8 border-t">
+      <div className="text-2xl text-center pt-8 ">
         <Title text1={"ABOUT"} text2={"US"} />
       </div>
       <div className="my-10 flex flex-col md:flex-row gap-16">
@@ -50,7 +50,7 @@ const About = () => {
             nisi blanditiis culpa quibusdam officia, possimus quisquam?
           </p>
         </div>
-        <div className="border px-10 md:px-16 py-8 sm:py-20 flex flex-col gap-5">
+        <div className="border-t border-b px-10 md:px-16 py-8 sm:py-20 flex flex-col gap-5">
           <b>Convenience :</b>
           <p className="text-gray-600">
             Lorem ipsum dolor sit amet consectetur adipisicing elit.

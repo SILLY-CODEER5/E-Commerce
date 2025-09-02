@@ -8,7 +8,7 @@ const Navbar = () => {
   return (
     <div
       className="flex items-center justify-between py-5
-  font-medium"
+  font-medium sticky top-0 bg-white border-b  z-10"
     >
       <Link to="/">
         <img src={assets.logo} className="w-36" alt="" />

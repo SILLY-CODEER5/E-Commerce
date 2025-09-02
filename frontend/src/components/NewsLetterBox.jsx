@@ -1,9 +1,12 @@
 import React from "react";
 
 const NewsLetterBox = () => {
+  //states
   const onSubmitHandler = (e) => {
     e.preventDefault();
   };
+
+  //rendered
   return (
     <div className="text-center">
       <p className="text-2xl font-medium text-gray-800">
