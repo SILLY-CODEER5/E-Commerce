@@ -1,16 +1,14 @@
 import { createContext, useEffect, useState } from "react";
-// import { products } from "../assets/assets";
 import { toast } from "react-toastify";
 import { useLocation, useNavigate } from "react-router-dom";
-import { backendUrl } from "../App";
 import axios from "axios";
-// import "dotenv/config.js";
 
 export const ShopContext = createContext();
 
 const ShopContextProvider = ({ children }) => {
   const currency = "$";
   const delivery_fee = 10;
+  // const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [showSearch, setShowSearch] = useState(false);
@@ -19,13 +17,18 @@ const ShopContextProvider = ({ children }) => {
   const path = useLocation();
   const backendUrl = "http://localhost:4000";
 
-  useEffect(() => {
-    (async () => {
-      const response = await axios.get(backendUrl + "/api/v1/products/list");
-      console.log(backendUrl);
-      console.log(response.data);
+  const fetchData = async () => {
+    console.log(backendUrl);
+    const response = await axios.get(backendUrl + "/api/v1/products/list");
+    console.log(response.data.products);
+    if (response.data.success === "200") {
       setProducts(response.data.products);
-    })();
+    } else {
+      toast.error(response.data.msg);
+    }
+  };
+  useEffect(() => {
+    fetchData();
   }, []);
 
   const addToCart = async (itemId, size) => {
@@ -101,6 +104,7 @@ const ShopContextProvider = ({ children }) => {
     getCartAmount,
     navigate,
     path,
+    backendUrl,
   };
 
   return <ShopContext.Provider value={value}>{children}</ShopContext.Provider>;
