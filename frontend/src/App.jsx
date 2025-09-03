@@ -7,6 +7,7 @@ import Product from "./pages/Product";
 import Login from "./pages/Login";
 import PlaceOrder from "./pages/PlaceOrder";
 import Orders from "./pages/Orders";
+import VerifyPayment from "./pages/VerifyPayment";
 import Navbar from "./components/Navbar";
 import Cart from "./pages/Cart";
 import Footer from "./components/Footer";
@@ -14,7 +15,6 @@ import SearchBar from "./components/SearchBar";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ScrollToTop from "./components/ScrollToTop";
-import Verify from "./pages/Verify";
 const App = () => {
   return (
     <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
@@ -32,7 +32,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/place-order" element={<PlaceOrder />} />
         <Route path="/orders" element={<Orders />} />
-        <Route path="/verify" element={<Verify />} />
+        <Route path="/verify-payment" element={<VerifyPayment />} />
       </Routes>
       <Footer />
     </div>

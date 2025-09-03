@@ -1,10 +1,8 @@
 import { userModel } from "../models/users.model.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import { orderModel } from "../models/order.model.js";
+import { productModel } from "../models/product.model.js";
 import Stripe from "stripe";
-// import { currency } from "../../admin/src/App.jsx";
-
-// global variables
 const currency = "INR";
 const deliveryCharges = 10;
 
@@ -30,71 +28,126 @@ const placeOrder = asyncHandler(async (req, res) => {
   res.json({ success: true, msg: "Order Placed..." });
 });
 
-// placing orders using Stripe method
 const placeOrderStripe = asyncHandler(async (req, res) => {
   const { userId, items, amount, address } = req.body;
   const { origin } = req.headers;
 
-  const orderData = {
-    userId,
-    items,
-    amount,
-    address,
-    paymentMethod: "Stripe",
-    payment: false,
-    date: Date.now(),
-  };
+  if (!items || items.length === 0) {
+    return res.status(400).json({
+      success: false,
+      msg: "Cannot place an order with an empty cart.",
+    });
+  }
+  // -----------------------------------------
 
-  const newOrder = new orderModel(orderData);
-  await newOrder.save();
-
-  const line_items = items.map((item) => ({
-    price_data: {
-      currency: currency,
-      product_data: {
-        name: item.name,
+  try {
+    const line_items = items.map((item) => ({
+      price_data: {
+        currency: currency,
+        product_data: { name: item.name },
+        unit_amount: Math.round(item.price * 100),
       },
-      unit_amount: item.price * 100,
-    },
-    quantity: item.quantity,
-  }));
+      quantity: item.quantity,
+    }));
 
-  line_items.push({
-    price_data: {
-      currency: currency,
-      product_data: {
-        name: "Delivery Charges",
+    line_items.push({
+      price_data: {
+        currency: currency,
+        product_data: { name: "Delivery Charges" },
+        unit_amount: deliveryCharges * 100,
       },
-      unit_amount: deliveryCharges * 100,
-    },
-    quantity: 1,
-  });
-  const session = await stripe.checkout.sessions.create({
-    success_url: `${origin}/verify?success=true&orderId=${newOrder._id}`,
-    cancel_url: `${origin}/verify?success=false&orderId=${newOrder._id}`,
-    line_items,
-    mode: "payment",
-  });
-  res.json({ success: true, session_url: session.url });
+      quantity: 1,
+    });
+
+    const itemsToStore = items.map((item) => ({
+      productId: item._id,
+      quantity: item.quantity,
+      size: item.size,
+    }));
+
+    const session = await stripe.checkout.sessions.create({
+      success_url: `${origin}/verify-payment?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${origin}/cart`,
+      line_items,
+      mode: "payment",
+      metadata: {
+        userId,
+        items: JSON.stringify(itemsToStore),
+        amount,
+        address: JSON.stringify(address),
+      },
+    });
+
+    res.json({ success: true, session_url: session.url });
+  } catch (error) {
+    console.error("Stripe Session Creation Failed:", error);
+    res
+      .status(500)
+      .json({ success: false, msg: "Failed to create Stripe session." });
+  }
 });
 
-// verify stripe
-const verifyStripe = async (req, res) => {
-  const { orderId, success, userId } = req.body;
+const verifyStripeSession = asyncHandler(async (req, res) => {
+  const { sessionId } = req.body;
+
   try {
-    if (success === "true") {
-      await orderModel.findByIdAndUpdate(orderId, { payment: true });
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+    if (session.payment_status === "paid") {
+      const { userId, items, amount, address } = session.metadata;
+
+      const itemsFromMeta = JSON.parse(items);
+
+      const orderItems = await Promise.all(
+        itemsFromMeta.map(async (item) => {
+          const product = await productModel.findById(item.productId);
+          if (!product) {
+            console.error(
+              `Product with ID ${item.productId} not found in the database.`
+            );
+            throw new Error(`A product in your order could not be found.`);
+          }
+
+          return {
+            _id: product._id,
+            name: product.name,
+            description: product.description,
+            price: product.price,
+            image: product.image,
+            category: product.category,
+            size: item.size,
+            quantity: item.quantity,
+          };
+        })
+      );
+
+      const orderData = {
+        userId,
+        items: orderItems,
+        amount: Number(amount),
+        address: JSON.parse(address),
+        paymentMethod: "Stripe",
+        payment: true,
+        status: "Order Placed",
+        date: Date.now(),
+        metadata: { stripeSessionId: sessionId },
+      };
+
+      const newOrder = new orderModel(orderData);
+      await newOrder.save();
       await userModel.findByIdAndUpdate(userId, { cartData: {} });
+
       res.json({ success: true });
     } else {
-      await orderModel.findByIdAndDelete(orderId);
-      res.json({ success: false });
+      res.json({ success: false, msg: "Payment not successful." });
     }
   } catch (error) {
-    console.log(error);
-    res.json({ success: false, message: error.message });
+    console.error("Error in verifyStripeSession:", error.message);
+    res
+      .status(500)
+      .json({ success: false, msg: "Server error during verification." });
   }
-};
+});
 
 // placing orders using Razorpay method
 const placeOrderRazorpay = asyncHandler(async (req, res) => {});
@@ -127,5 +180,5 @@ export {
   allOrders,
   userOrders,
   updateStatus,
-  verifyStripe,
+  verifyStripeSession,
 };
