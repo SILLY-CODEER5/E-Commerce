@@ -78,6 +78,20 @@ const PlaceOrder = () => {
             toast.error(response.data.msg);
           }
           break;
+        case "stripe":
+          const responseStripe = await axios.post(
+            backendUrl + "/api/v1/order/stripe",
+            orderData,
+            { headers: { token } }
+          );
+          console.log(responseStripe);
+          if (responseStripe.data.success) {
+            const { session_url } = responseStripe.data;
+            window.location.replace(session_url);
+          } else {
+            toast.error(responseStripe.data.msg);
+          }
+          break;
 
         default:
           break;
