@@ -223,7 +223,7 @@ const PlaceOrder = () => {
               ></p>
               <img className="h-5 mx-4" src={assets.stripe_logo} alt="" />
             </div>
-            <div
+            {/* <div
               onClick={() => setPayMethod("razorpay")}
               className="flex items-center gap-3 border p-2 px-3 cursor-pointer"
             >
@@ -231,7 +231,7 @@ const PlaceOrder = () => {
                 className={`min-w-3.5 h-3.5 border rounded-full ${payMethod === "razorpay" ? "bg-green-400" : ""}`}
               ></p>
               <img className="h-5 mx-4" src={assets.razorpay_logo} alt="" />
-            </div>
+            </div> */}
             <div
               onClick={() => setPayMethod("cod")}
               className="flex items-center gap-3 border p-2 px-3 cursor-pointer"
