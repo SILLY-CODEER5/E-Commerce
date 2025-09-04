@@ -4,7 +4,7 @@ import { assets } from "../assets/assets";
 
 const About = () => {
   return (
-    <div className="max-w-5xl mx-auto px-4 border-t sm:px-6 lg:px-8">
+    <div className=" px-4 border-t sm:px-6 lg:px-8">
       <div className="text-2xl text-center pt-8">
         <Title text1={"ABOUT"} text2={"US"} />
       </div>
@@ -13,7 +13,7 @@ const About = () => {
       <div className="my-12 flex flex-col lg:flex-row lg:items-center gap-12">
         <div className="lg:w-1/2">
           <img
-            className="w-full h-auto object-cover rounded-lg shadow-md"
+            className="w-full h-auto object-cover  shadow-md"
             src={assets.about_img}
             alt="Team working together"
           />
@@ -40,8 +40,8 @@ const About = () => {
       </div>
 
       {/* --- Why Choose Us Section (with Borders Restored) --- */}
-      <div className="mb-20 border border-gray-200 rounded-lg overflow-hidden">
-        <div className="divide-y divide-gray-200 lg:divide-y-0 lg:divide-x lg:divide-gray-200 grid grid-cols-1 lg:grid-cols-3">
+      <div className="mb-20 border  overflow-hidden">
+        <div className="divide-y divide-black lg:divide-y-0 lg:divide-x lg:divide-black grid grid-cols-1 lg:grid-cols-3">
           <div className="p-8 flex flex-col gap-4">
             <b className="text-lg">Quality Assurance</b>
             <p className="text-gray-600">

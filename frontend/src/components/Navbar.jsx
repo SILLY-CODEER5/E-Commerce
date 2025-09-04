@@ -14,7 +14,11 @@ const Navbar = () => {
     setToken,
     setCartItems,
   } = useContext(ShopContext);
-  const { path } = useContext(ShopContext);
+
+  const handleSearchClick = () => {
+    navigate("/collection");
+    setShowSearch(true);
+  };
 
   const logout = () => {
     navigate("/");
@@ -55,7 +59,7 @@ const Navbar = () => {
       <div className="flex items-center gap-6">
         <div className="w-5">
           <img
-            onClick={() => setShowSearch(true)}
+            onClick={handleSearchClick}
             src={assets.search_icon}
             className={` cursor-pointer`}
             alt=""

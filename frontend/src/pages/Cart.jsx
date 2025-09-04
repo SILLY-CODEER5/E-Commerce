@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ShopContext } from "../context/ShopContext";
 import Title from "../components/Title";
 import { assets } from "../assets/assets";
 import CartTotal from "../components/CartTotal";
-import RelatedProducts from "../components/RelatedProducts";
 import BestSeller from "../components/BestSeller";
 
 const Cart = () => {
@@ -41,7 +40,7 @@ const Cart = () => {
           <BestSeller />
         </div>
       ) : (
-        <div className=" pt-14">
+        <div className="border-t pt-14">
           <div className="text-2xl mb-3">
             <Title text1={"YOUR"} text2={"CART"} />
           </div>

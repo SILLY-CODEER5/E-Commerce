@@ -1,14 +1,17 @@
+// order.controller.js
+
 import { userModel } from "../models/users.model.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import { orderModel } from "../models/order.model.js";
 import { productModel } from "../models/product.model.js";
 import Stripe from "stripe";
-const currency = "INR";
+const currency = "USD";
 const deliveryCharges = 10;
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-// placing orders using COD method
+// ... (placeOrder, placeOrderStripe functions remain the same) ...
+
 const placeOrder = asyncHandler(async (req, res) => {
   const { userId, items, amount, address } = req.body;
 
@@ -38,8 +41,6 @@ const placeOrderStripe = asyncHandler(async (req, res) => {
       msg: "Cannot place an order with an empty cart.",
     });
   }
-  // -----------------------------------------
-
   try {
     const line_items = items.map((item) => ({
       price_data: {
@@ -86,96 +87,147 @@ const placeOrderStripe = asyncHandler(async (req, res) => {
       .json({ success: false, msg: "Failed to create Stripe session." });
   }
 });
-
 const verifyStripeSession = asyncHandler(async (req, res) => {
   const { sessionId } = req.body;
+
+  if (!sessionId) {
+    return res
+      .status(400)
+      .json({ success: false, msg: "Session ID is required." });
+  }
 
   try {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
 
-    if (session.payment_status === "paid") {
-      const { userId, items, amount, address } = session.metadata;
+    if (session.payment_status !== "paid") {
+      return res.json({ success: false, msg: "Payment not successful." });
+    }
 
-      const itemsFromMeta = JSON.parse(items);
+    const {
+      userId,
+      items: itemsString,
+      amount,
+      address: addressString,
+    } = session.metadata;
 
-      const orderItems = await Promise.all(
-        itemsFromMeta.map(async (item) => {
-          const product = await productModel.findById(item.productId);
-          if (!product) {
-            console.error(
-              `Product with ID ${item.productId} not found in the database.`
-            );
-            throw new Error(`A product in your order could not be found.`);
-          }
+    let itemsFromMeta, address;
+    try {
+      itemsFromMeta = JSON.parse(itemsString);
+      address = JSON.parse(addressString);
+    } catch (e) {
+      console.error("Failed to parse metadata JSON:", e);
+      return res
+        .status(400)
+        .json({ success: false, msg: "Order metadata is corrupt." });
+    }
 
-          return {
-            _id: product._id,
-            name: product.name,
-            description: product.description,
-            price: product.price,
-            image: product.image,
-            category: product.category,
-            size: item.size,
-            quantity: item.quantity,
-          };
-        })
+    const productIds = itemsFromMeta.map((item) => item.productId);
+
+    // --- START: THE FIX ---
+    // 1. Get a list of *unique* product IDs from the cart.
+    const uniqueProductIds = [...new Set(productIds)];
+
+    // 2. Find all unique products in the database at once.
+    const productsInDb = await productModel.find({
+      _id: { $in: uniqueProductIds },
+    });
+
+    // 3. Compare the count of unique products found vs. the count of unique IDs required.
+    if (productsInDb.length !== uniqueProductIds.length) {
+      // This will now only fail if a genuinely non-existent product ID is in the cart.
+      console.error(
+        "A product in the order could not be found in the database."
       );
 
-      const orderData = {
-        userId,
-        items: orderItems,
-        amount: Number(amount),
-        address: JSON.parse(address),
-        paymentMethod: "Stripe",
-        payment: true,
-        status: "Order Placed",
-        date: Date.now(),
-        metadata: { stripeSessionId: sessionId },
+      // For debugging, find which ID is missing
+      const foundProductIds = productsInDb.map((p) => p._id.toString());
+      const missingId = uniqueProductIds.find(
+        (id) => !foundProductIds.includes(id)
+      );
+      console.error(`Missing Product ID: ${missingId}`);
+
+      return res.status(404).json({
+        success: false,
+        msg: "One or more products in your order are no longer available. Please contact support.",
+      });
+    }
+    // --- END: THE FIX ---
+
+    const productMap = new Map(productsInDb.map((p) => [p._id.toString(), p]));
+    const orderItems = itemsFromMeta.map((item) => {
+      const product = productMap.get(item.productId);
+      return {
+        _id: product._id,
+        name: product.name,
+        description: product.description,
+        price: product.price,
+        image: product.image,
+        category: product.category,
+        size: item.size,
+        quantity: item.quantity,
       };
+    });
 
-      const newOrder = new orderModel(orderData);
-      await newOrder.save();
-      await userModel.findByIdAndUpdate(userId, { cartData: {} });
+    const user = await userModel.findById(userId);
+    if (!user) {
+      console.error(`User with ID ${userId} not found.`);
+      return res
+        .status(404)
+        .json({ success: false, msg: "User account not found." });
+    }
 
-      res.json({ success: true });
+    const orderData = {
+      userId,
+      items: orderItems,
+      amount: Number(amount),
+      address,
+      paymentMethod: "Stripe",
+      payment: true,
+      status: "Order Placed",
+      date: Date.now(),
+      metadata: { stripeSessionId: sessionId },
+    };
+
+    const existingOrder = await orderModel.findOneAndUpdate(
+      { "metadata.stripeSessionId": sessionId },
+      { $setOnInsert: orderData },
+      { upsert: true, new: false }
+    );
+
+    if (existingOrder) {
+      return res.json({ success: true, msg: "Order already processed." });
     } else {
-      res.json({ success: false, msg: "Payment not successful." });
+      user.cartData = {};
+      await user.save();
+      return res.json({ success: true, msg: "Order placed successfully." });
     }
   } catch (error) {
-    console.error("Error in verifyStripeSession:", error.message);
-    res
+    console.error("CRITICAL ERROR in verifyStripeSession:", error.message);
+    return res
       .status(500)
-      .json({ success: false, msg: "Server error during verification." });
+      .json({ success: false, msg: "An unexpected server error occurred." });
   }
 });
 
-// placing orders using Razorpay method
-const placeOrderRazorpay = asyncHandler(async (req, res) => {});
-
-// all orders data for Admin Panel
 const allOrders = asyncHandler(async (req, res) => {
   const orders = await orderModel.find({});
   res.json({ success: true, orders });
 });
 
-// user order data for frontend
 const userOrders = asyncHandler(async (req, res) => {
   const { userId } = req.body;
   const orders = await orderModel.find({ userId });
   res.json({ success: true, orders });
 });
 
-// update order status from Admin Panel
 const updateStatus = asyncHandler(async (req, res) => {
   const { orderId, status } = req.body;
-
   await orderModel.findByIdAndUpdate(orderId, { status });
   res.json({ success: true, msg: "Status Updated" });
 });
 
 export {
   placeOrder,
-  placeOrderRazorpay,
   placeOrderStripe,
   allOrders,
   userOrders,
