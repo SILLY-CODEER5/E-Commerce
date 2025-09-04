@@ -1,32 +1,31 @@
 import React from "react";
 import Title from "../components/Title";
 import { assets } from "../assets/assets";
+
 const About = () => {
   return (
-    <div>
-      <div className="text-2xl text-center pt-8 ">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="text-2xl text-center pt-8">
         <Title text1={"ABOUT"} text2={"US"} />
       </div>
-      <div className="my-10 flex flex-col md:flex-row gap-16">
-        <img
-          className="w-full md:max-w-[450px]"
-          src={assets.about_img}
-          alt=""
-        />
-        <div className="flex flex-col justify-center gap-6  md:w-2/4 text-gray-600">
-          <p>
+
+      {/* --- About Us Section --- */}
+      <div className="my-12 flex flex-col lg:flex-row lg:items-center gap-12">
+        <div className="lg:w-1/2">
+          <img
+            className="w-full h-auto object-cover rounded-lg shadow-md"
+            src={assets.about_img}
+            alt="Team working together"
+          />
+        </div>
+        <div className="lg:w-1/2 flex flex-col gap-5 text-gray-600">
+          <p className="text-lg leading-relaxed">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto,
             voluptatibus explicabo natus sequi nostrum officia cum modi
             voluptas? Modi ea nesciunt amet, numquam non quidem obcaecati alias
             mollitia sed provident.
           </p>
-          <p>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Excepturi
-            libero autem quidem deleniti nam soluta eum. Illum amet odio
-            veritatis recusandae voluptates, ad, sunt velit corporis magni quia
-            rem inventore?
-          </p>
-          <b className="text-gray-800">Our Mission</b>
+          <b className="text-gray-800 text-xl pt-2">Our Mission</b>
           <p>
             Lorem ipsum, dolor sit amet consectetur adipisicing elit. Facilis
             mollitia esse libero expedita. Recusandae placeat voluptas
@@ -36,37 +35,37 @@ const About = () => {
         </div>
       </div>
 
-      <div className="text-2xl py-4">
+      <div className="text-2xl py-6 text-center">
         <Title text1={"WHY"} text2={"CHOOSE US"} />
       </div>
 
-      <div className="flex flex-col md:flex-row text-sm mb-20">
-        <div className="border px-10 md:px-16 py-8 sm:py-20 flex flex-col gap-5">
-          <b>Quality Assurance :</b>
-          <p className="text-gray-600">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Dignissimos, autem tempore! Expedita at, temporibus aliquam
-            perferendis adipisci in, hic recusandae suscipit ratione excepturi
-            nisi blanditiis culpa quibusdam officia, possimus quisquam?
-          </p>
-        </div>
-        <div className="border-t border-b px-10 md:px-16 py-8 sm:py-20 flex flex-col gap-5">
-          <b>Convenience :</b>
-          <p className="text-gray-600">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Dignissimos, autem tempore! Expedita at, temporibus aliquam
-            perferendis adipisci in, hic recusandae suscipit ratione excepturi
-            nisi blanditiis culpa quibusdam officia, possimus quisquam?
-          </p>
-        </div>
-        <div className="border px-10 md:px-16 py-8 sm:py-20 flex flex-col gap-5">
-          <b>Exceptional Customer Service :</b>
-          <p className="text-gray-600">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Dignissimos, autem tempore! Expedita at, temporibus aliquam
-            perferendis adipisci in, hic recusandae suscipit ratione excepturi
-            nisi blanditiis culpa quibusdam officia, possimus quisquam?
-          </p>
+      {/* --- Why Choose Us Section (with Borders Restored) --- */}
+      <div className="mb-20 border border-gray-200 rounded-lg overflow-hidden">
+        <div className="divide-y divide-gray-200 lg:divide-y-0 lg:divide-x lg:divide-gray-200 grid grid-cols-1 lg:grid-cols-3">
+          <div className="p-8 flex flex-col gap-4">
+            <b className="text-lg">Quality Assurance</b>
+            <p className="text-gray-600">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Dignissimos, autem tempore! Expedita at, temporibus aliquam
+              perferendis adipisci in, hic recusandae suscipit ratione.
+            </p>
+          </div>
+          <div className="p-8 flex flex-col gap-4">
+            <b className="text-lg">Convenience</b>
+            <p className="text-gray-600">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Dignissimos, autem tempore! Expedita at, temporibus aliquam
+              perferendis adipisci in, hic recusandae suscipit ratione.
+            </p>
+          </div>
+          <div className="p-8 flex flex-col gap-4">
+            <b className="text-lg">Exceptional Customer Service</b>
+            <p className="text-gray-600">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Dignissimos, autem tempore! Expedita at, temporibus aliquam
+              perferendis adipisci in, hic recusandae suscipit ratione.
+            </p>
+          </div>
         </div>
       </div>
     </div>
