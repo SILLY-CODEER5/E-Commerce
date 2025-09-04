@@ -33,7 +33,7 @@ const Cart = () => {
   return (
     <>
       {cartData.length === 0 ? (
-        <div>
+        <div className="border-t">
           <div className="flex justify-center mt-10 text-2xl items-center h-[40vh] text-gray-500">
             Your Cart is Empty !
           </div>

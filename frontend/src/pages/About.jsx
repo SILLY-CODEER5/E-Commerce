@@ -4,7 +4,7 @@ import { assets } from "../assets/assets";
 
 const About = () => {
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="max-w-5xl mx-auto px-4 border-t sm:px-6 lg:px-8">
       <div className="text-2xl text-center pt-8">
         <Title text1={"ABOUT"} text2={"US"} />
       </div>

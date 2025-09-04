@@ -28,7 +28,7 @@ const Product = () => {
 
   console.log(productId);
   return productData ? (
-    <div className=" pt-10 transition-opacity ease-in duration-500 opacity-100">
+    <div className=" pt-10 transition-opacity border-t ease-in duration-500 opacity-100">
       {/* Product Data */}
       <div className="flex gap-12 sm:gap-12 flex-col sm:flex-row">
         {/* Product Images */}

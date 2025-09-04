@@ -4,7 +4,7 @@ import { assets } from "../assets/assets";
 import NewsletterBox from "../components/NewsLetterBox";
 const Contact = () => {
   return (
-    <div>
+    <div className="border-t">
       <div className="text-center text-2xl pt-10 ">
         <Title text1={"CONTACT"} text2={"US"} />
       </div>

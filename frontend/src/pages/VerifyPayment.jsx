@@ -50,7 +50,7 @@ const VerifyPayment = () => {
   }, [sessionId, backendUrl, token, navigate, setCartItems]);
 
   return (
-    <div className="min-h-[80vh] flex flex-col items-center justify-center text-center">
+    <div className="min-h-[80vh] flex flex-col items-center border-t justify-center text-center">
       <div className="w-24 h-24 border-8 border-dashed rounded-full animate-spin border-green-500"></div>
       <Title text1={"PAYMENT"} text2={"VERIFICATION"} />
       <p className="mt-4 text-gray-600">{message}</p>
