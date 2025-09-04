@@ -51,7 +51,7 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="flex items-center justify-between py-5 font-medium sticky top-0 bg-white border-b z-30 px-4 sm:px-6 lg:px-8">
+      <div className="flex items-center justify-between py-5 font-medium sticky top-0 bg-white z-30 px-4 sm:px-6 lg:px-8">
         <Link to="/">
           <img src={assets.logo} className="w-32 sm:w-36" alt="Logo" />
         </Link>
@@ -128,7 +128,7 @@ const Navbar = () => {
             aria-label="Toggle menu"
           >
             <img
-              src={isOpen ? assets.close_icon : assets.menu_icon}
+              src={isOpen ? assets.cross_icon : assets.menu_icon}
               className="w-5 h-5 transition-transform duration-300"
               alt="Menu toggle"
             />
