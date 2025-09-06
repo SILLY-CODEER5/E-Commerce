@@ -8,7 +8,7 @@ export const ShopContext = createContext();
 const ShopContextProvider = ({ children }) => {
   const currency = "$";
   const delivery_fee = 10;
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  // const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [showSearch, setShowSearch] = useState(true);
@@ -16,7 +16,7 @@ const ShopContextProvider = ({ children }) => {
   const navigate = useNavigate();
   const path = useLocation();
   const [token, setToken] = useState("");
-  // const backendUrl = "http://localhost:4000";
+  const backendUrl = "http://localhost:4000";
 
   const fetchData = async () => {
     // console.log(backendUrl);
@@ -28,6 +28,7 @@ const ShopContextProvider = ({ children }) => {
       toast.error(response.data.msg);
     }
   };
+
   useEffect(() => {
     fetchData();
   }, []);
