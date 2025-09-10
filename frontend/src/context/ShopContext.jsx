@@ -4,11 +4,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export const ShopContext = createContext();
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 const ShopContextProvider = ({ children }) => {
   const currency = "$";
   const delivery_fee = 10;
-  // const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [showSearch, setShowSearch] = useState(true);
@@ -16,7 +16,6 @@ const ShopContextProvider = ({ children }) => {
   const navigate = useNavigate();
   const path = useLocation();
   const [token, setToken] = useState("");
-  const backendUrl = "http://localhost:4000";
 
   const fetchData = async () => {
     // console.log(backendUrl);
