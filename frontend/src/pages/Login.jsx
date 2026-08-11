@@ -1,15 +1,17 @@
 import { useContext, useEffect, useState } from "react";
-import { ShopContext } from "../context/ShopContext";
+import useShopStore from "../store/useShopStore";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 
 const Login = () => {
   const [currentState, setCurrentState] = useState("Login");
-  const { token, setToken, navigate } = useContext(ShopContext);
+  const { token, setToken } = useShopStore();
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  const { backendUrl, getUserCart } = useContext(ShopContext);
+  const { backendUrl, getUserCart, fetchUserProfile } = useShopStore();
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
@@ -22,6 +24,7 @@ const Login = () => {
         if (response.data.success) {
           setToken(response.data.token);
           localStorage.setItem("token", response.data.token);
+          fetchUserProfile(response.data.token);
         } else {
           toast.error(response.data.msg);
         }
@@ -36,7 +39,8 @@ const Login = () => {
         if (response.data.success) {
           setToken(response.data.token);
           localStorage.setItem("token", response.data.token);
-          getUserCart(localStorage.getItem("token"));
+          getUserCart(response.data.token);
+          fetchUserProfile(response.data.token);
           toast.success(response.data.msg);
         } else {
           toast.error(response.data.msg);
@@ -65,7 +69,11 @@ const Login = () => {
           <hr className="border-none h-[1.5px] w-8 bg-gray-800" />
         </div>
         {currentState === "Login" ? (
-          ""
+          <div className="w-full bg-gray-100 text-gray-700 text-sm p-3 rounded-md mb-2 border border-gray-200">
+            <p className="font-semibold mb-1">Demo Credentials:</p>
+            <p>Email: admin@forever.com</p>
+            <p>Password: 12345678</p>
+          </div>
         ) : (
           <input
             value={name}

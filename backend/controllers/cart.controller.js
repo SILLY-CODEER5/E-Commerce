@@ -1,7 +1,10 @@
 import { userModel } from "../models/users.model.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
-// add products to user cart
+/**
+ * Adds a product to the user's cart.
+ * @route POST /api/v1/cart/add
+ */
 const addToCart = asyncHandler(async (req, res) => {
   const { userId, itemId, size } = req.body;
 
@@ -21,18 +24,24 @@ const addToCart = asyncHandler(async (req, res) => {
 
   await userModel.findByIdAndUpdate(userId, { cartData });
 
-  res.json({ success: true, msg: "Added to Cart." });
+  res.json({ success: true, msg: "Item added to cart successfully." });
 });
-//update user cart
+/**
+ * Updates the quantity of a product in the user's cart.
+ * @route POST /api/v1/cart/update
+ */
 const updateCart = asyncHandler(async (req, res) => {
   const { userId, itemId, size, quantity } = req.body;
   const userData = await userModel.findById(userId);
   let cartData = await userData.cartData;
   cartData[itemId][size] = quantity;
   await userModel.findByIdAndUpdate(userId, { cartData });
-  res.json({ success: true, msg: "Cart Updated." });
+  res.json({ success: true, msg: "Cart updated successfully." });
 });
-// get user cart data
+/**
+ * Retrieves the user's cart data.
+ * @route GET /api/v1/cart/get
+ */
 const getUserCart = asyncHandler(async (req, res) => {
   const { userId } = req.body;
   const userData = await userModel.findById(userId).lean();

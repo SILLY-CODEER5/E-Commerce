@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { ShopContext } from "../context/ShopContext";
+import useShopStore from "../store/useShopStore";
 import { toast } from "react-toastify";
 import Title from "../components/Title";
 
 const VerifyPayment = () => {
   const [message, setMessage] = useState("Verifying your payment...");
-  const { backendUrl, token, setCartItems } = useContext(ShopContext);
+  const { backendUrl, token, setCartItems } = useShopStore();
   const location = useLocation();
   const navigate = useNavigate();
   const sessionId = new URLSearchParams(location.search).get("session_id");

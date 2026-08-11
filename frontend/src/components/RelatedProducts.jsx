@@ -1,13 +1,13 @@
 import { useContext, useEffect, useState } from "react";
-import { ShopContext } from "../context/ShopContext";
+import useShopStore from "../store/useShopStore";
 import Title from "./Title";
 import ProductItem from "./ProductItem";
 
 const RelatedProducts = ({ category, subCategory }) => {
-  //states
-  const { products } = useContext(ShopContext);
+
+  const { products } = useShopStore();
   const [related, setRelated] = useState([]);
-  //functions
+
   useEffect(() => {
     if (products.length > 0) {
       let productsCopy = products.slice();
@@ -20,7 +20,7 @@ const RelatedProducts = ({ category, subCategory }) => {
     }
   }, [products]);
 
-  //rendered
+
   return (
     <div className="my-24">
       <div className="text-center text-3xl py-2">

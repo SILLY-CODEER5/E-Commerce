@@ -2,13 +2,13 @@ import React, { useContext, useState } from "react";
 import Title from "../components/Title";
 import CartTotal from "../components/CartTotal";
 import { assets } from "../assets/assets";
-import { ShopContext } from "../context/ShopContext";
+import useShopStore from "../store/useShopStore";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 
 const PlaceOrder = () => {
   const {
-    navigate,
     backendUrl,
     token,
     cartItems,
@@ -16,7 +16,8 @@ const PlaceOrder = () => {
     getCartAmount,
     delivery_fee,
     products,
-  } = useContext(ShopContext);
+  } = useShopStore();
+  const navigate = useNavigate();
   const [payMethod, setPayMethod] = useState("cod");
   const [formData, setFormData] = useState({
     firstName: "",
@@ -69,7 +70,7 @@ const PlaceOrder = () => {
             orderData,
             { headers: { token } }
           );
-          console.log(response.data);
+
           if (response.data.success) {
             setCartItems({});
             navigate("/orders");
@@ -84,7 +85,7 @@ const PlaceOrder = () => {
             orderData,
             { headers: { token } }
           );
-          console.log(responseStripe);
+
           if (responseStripe.data.success) {
             const { session_url } = responseStripe.data;
             window.location.replace(session_url);
@@ -201,7 +202,7 @@ const PlaceOrder = () => {
         />
       </div>
 
-      {/* Right Side */}
+      {/* Order Summary & Payment */}
 
       <div className="mt-8">
         <div className="mt-8 min-w-80">
@@ -223,15 +224,7 @@ const PlaceOrder = () => {
               ></p>
               <img className="h-5 mx-4" src={assets.stripe_logo} alt="" />
             </div>
-            {/* <div
-              onClick={() => setPayMethod("razorpay")}
-              className="flex items-center gap-3 border p-2 px-3 cursor-pointer"
-            >
-              <p
-                className={`min-w-3.5 h-3.5 border rounded-full ${payMethod === "razorpay" ? "bg-green-400" : ""}`}
-              ></p>
-              <img className="h-5 mx-4" src={assets.razorpay_logo} alt="" />
-            </div> */}
+
             <div
               onClick={() => setPayMethod("cod")}
               className="flex items-center gap-3 border p-2 px-3 cursor-pointer"

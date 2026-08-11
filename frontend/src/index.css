@@ -2,7 +2,7 @@
 @import "tailwindcss";
 
 a.active hr {
-  display: block;
+  opacity: 1;
 }
 
 * {

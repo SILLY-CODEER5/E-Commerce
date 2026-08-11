@@ -10,7 +10,7 @@ import Login from "./components/Login";
 import Loading from "./components/Loading";
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL;
-export const currency = "$";
+export const currency = "₹";
 const App = () => {
   const [token, setToken] = useState(
     localStorage.getItem("token") ? localStorage.getItem("token") : ""
@@ -22,16 +22,16 @@ const App = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      <ToastContainer autoClose={1500} limit={3} />
+      <ToastContainer autoClose={800} limit={3} />
       {token === "" ? (
         <Login setToken={setToken} />
       ) : (
         <>
           <Navbar setToken={setToken} />
           <hr />
-          <div className="flex w-full">
+          <div className="flex w-full h-[calc(100vh-64px)]">
             <Sibebar />
-            <div className="w-[70%] mx-auto ml-[max(5vw, 25px)] my-8 text-gray-600 text-base">
+            <div className="flex-1 px-8 sm:px-12 lg:px-16 pb-8 text-gray-600 text-base overflow-y-auto">
               <Suspense fallback={<Loading />}>
                 <Routes>
                   <Route path="/" element={<Add token={token} />} />

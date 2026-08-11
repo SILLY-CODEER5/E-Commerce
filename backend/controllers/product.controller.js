@@ -5,20 +5,15 @@ import NodeCache from "node-cache";
 
 const cache = new NodeCache();
 
-// controllers functions--------
+/**
+ * Product Controller Functions
+ * Handles adding, removing, and listing products.
+ */
 
 const addProduct = asyncHandler(async (req, res) => {
   const { name, description, price, category, subCategory, sizes, bestseller } =
     req.body;
-  //   console.log(
-  //     name,
-  //     description,
-  //     price,
-  //     category,
-  //     subCategory,
-  //     sizes,
-  //     bestseller
-  //   );
+
 
   const image1 = req.files.image1 && req.files.image1[0];
   const image2 = req.files.image2 && req.files.image2[0];
@@ -29,7 +24,7 @@ const addProduct = asyncHandler(async (req, res) => {
     (item) => item !== undefined
   );
 
-  //   console.log(images);
+
 
   let imagesUrl = await Promise.all(
     images.map(async (item) => {
@@ -40,7 +35,7 @@ const addProduct = asyncHandler(async (req, res) => {
     })
   );
 
-  //   console.log(imagesUrl);
+
 
   const productData = {
     name,
@@ -54,16 +49,16 @@ const addProduct = asyncHandler(async (req, res) => {
     date: Date.now(),
   };
 
-  //   console.log(productData);
+
 
   const product = new productModel(productData);
   const added = await product.save();
   cache.del("all_products");
-  //   console.log(added);
+
 
   res.json({
     status: "201",
-    msg: "Product added successfully !",
+    msg: "Product added successfully.",
     product: product,
   });
 });
@@ -82,9 +77,28 @@ const listProducts = asyncHandler(async (req, res) => {
 });
 
 const removeProduct = asyncHandler(async (req, res) => {
+  const product = await productModel.findById(req.body.id);
+  if (!product) {
+    return res.json({ success: false, msg: "Product not found!" });
+  }
+
+  // Delete images from Cloudinary
+  if (product.image && product.image.length > 0) {
+    for (const imgUrl of product.image) {
+      try {
+        const parts = imgUrl.split('/');
+        const fileName = parts[parts.length - 1];
+        const publicId = fileName.split('.')[0];
+        await cloudinary.uploader.destroy(publicId);
+      } catch (err) {
+        console.error("Failed to delete image from Cloudinary:", imgUrl, err);
+      }
+    }
+  }
+
   await productModel.findByIdAndDelete(req.body.id);
   cache.del("all_products");
-  res.json({ success: "200", msg: "Product removed successfully !" });
+  res.json({ success: "200", msg: "Product removed successfully." });
 });
 
 const singleProduct = asyncHandler(async (req, res) => {

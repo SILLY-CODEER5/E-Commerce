@@ -2,7 +2,7 @@ import mongoose, { model, Schema } from "mongoose";
 
 const orderSchema = new Schema(
   {
-    userId: { type: String, required: true },
+    userId: { type: String, required: true, index: true },
     items: { type: Array, required: true },
     amount: { type: Number, required: true },
     address: { type: Object, required: true },
@@ -13,6 +13,7 @@ const orderSchema = new Schema(
     metadata: {
       stripeSessionId: {
         type: String,
+        index: true,
       },
     },
   },

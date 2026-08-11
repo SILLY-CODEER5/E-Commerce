@@ -5,7 +5,7 @@ import asyncHandler from "../utils/asyncHandler.js";
 import { orderModel } from "../models/order.model.js";
 import { productModel } from "../models/product.model.js";
 import Stripe from "stripe";
-const currency = "USD";
+const currency = "inr";
 const deliveryCharges = 10;
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -28,7 +28,7 @@ const placeOrder = asyncHandler(async (req, res) => {
   const newOrder = new orderModel(orderData);
   await newOrder.save();
   await userModel.findByIdAndUpdate(userId, { cartData: {} });
-  res.json({ success: true, msg: "Order Placed..." });
+  res.json({ success: true, msg: "Order placed successfully." });
 });
 
 const placeOrderStripe = asyncHandler(async (req, res) => {
@@ -223,7 +223,7 @@ const userOrders = asyncHandler(async (req, res) => {
 const updateStatus = asyncHandler(async (req, res) => {
   const { orderId, status } = req.body;
   await orderModel.findByIdAndUpdate(orderId, { status });
-  res.json({ success: true, msg: "Status Updated" });
+  res.json({ success: true, msg: "Order status updated successfully." });
 });
 
 export {

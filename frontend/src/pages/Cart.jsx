@@ -1,13 +1,13 @@
 import { useContext, useEffect, useState } from "react";
-import { ShopContext } from "../context/ShopContext";
+import useShopStore from "../store/useShopStore";
+import { useNavigate } from "react-router-dom";
 import Title from "../components/Title";
 import { assets } from "../assets/assets";
 import CartTotal from "../components/CartTotal";
-import BestSeller from "../components/BestSeller";
 
 const Cart = () => {
-  const { products, currency, cartItems, updateQuantity, navigate } =
-    useContext(ShopContext);
+  const { products, currency, cartItems, updateQuantity } = useShopStore();
+  const navigate = useNavigate();
 
   const [cartData, setCartData] = useState([]);
 
@@ -37,7 +37,6 @@ const Cart = () => {
             Your Cart is Empty !
           </div>
           {/* <p>Explore more Products</p> */}
-          <BestSeller />
         </div>
       ) : (
         <div className="border-t pt-14">

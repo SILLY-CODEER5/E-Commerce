@@ -19,6 +19,10 @@ const userSchema = new Schema(
       type: Object,
       default: {},
     },
+    avatar: {
+      type: String,
+      default: "",
+    },
   },
   { minimize: false, timestamps: true }
 );

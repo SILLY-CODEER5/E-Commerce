@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
-import { ShopContext } from "../context/ShopContext";
+import useShopStore from "../store/useShopStore";
 import Title from "./Title";
 const CartTotal = () => {
-  //states
-  const { currency, delivery_fee, getCartAmount } = useContext(ShopContext);
 
-  //rendered
+  const { currency, delivery_fee, getCartAmount } = useShopStore();
+
+
   return (
     <div className="w-full">
       <div className="text-2xl">

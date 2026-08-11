@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
-import { ShopContext } from "../context/ShopContext";
+import useShopStore from "../store/useShopStore";
 import Title from "../components/Title";
 import { useEffect } from "react";
 import axios from "axios";
 import { useState } from "react";
 
 const Orders = () => {
-  const { backendUrl, token, currency } = useContext(ShopContext);
+  const { backendUrl, token, currency } = useShopStore();
 
   const [orderData, setOrderData] = useState([]);
 
@@ -34,7 +34,7 @@ const Orders = () => {
           });
         });
         setOrderData(allOrdersItem.reverse());
-        console.log(allOrdersItem);
+
       }
     } catch (error) {}
   };
@@ -82,12 +82,14 @@ const Orders = () => {
                 <p className="min-w-2 h-2 rounded-full bg-green-500"></p>
                 <p className="text-sm md:text-base ">{item.status}</p>
               </div>
-              <button
-                onClick={loadOrderData}
-                className="border px-4 py-2 text-sm font-medium rounded-sm"
-              >
-                Track Order
-              </button>
+              {item.status !== "Deliverd" && item.status !== "Delivered" && (
+                <button
+                  onClick={loadOrderData}
+                  className="border px-4 py-2 text-sm font-medium rounded-sm hover:bg-gray-50 transition-colors"
+                >
+                  Track Order
+                </button>
+              )}
             </div>
           </div>
         ))}

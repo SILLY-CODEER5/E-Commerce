@@ -50,12 +50,12 @@ const Orders = ({ token }) => {
   }, [token]);
 
   return (
-    <div>
-      <h3>Order Page</h3>
+    <div className="pt-8">
+      <p className="mb-4 text-lg font-medium text-gray-800">Order Management</p>
       <div>
         {orders.map((order, index) => (
           <div
-            className="grid grid-cols-1 sm:grid-cols-[0.5fr_2fr_1fr] lg:grid-cols-[0.5fr_2fr_1fr_1fr_1fr] gap-3 items-start border-2 border-gray-200 p-5 md:p-8 my-3 md:my-4 text-xs sm:text-sm text-gray-700"
+            className="grid grid-cols-1 sm:grid-cols-[0.5fr_2fr_1fr] lg:grid-cols-[0.5fr_2fr_1fr_1fr_1fr] gap-4 items-start border border-gray-200 p-5 md:p-8 my-3 md:my-4 text-xs sm:text-sm text-gray-700 bg-white rounded-md shadow-sm hover:shadow-md transition-shadow"
             key={index}
           >
             <img className="w-12" src={assets.parcel_icon} alt="" />
@@ -110,7 +110,7 @@ const Orders = ({ token }) => {
             <select
               onChange={(event) => statusHandler(event, order._id)}
               value={order.status}
-              className="p-2 font-semibold"
+              className="p-2 font-semibold bg-gray-50 border border-gray-300 rounded-md outline-none focus:ring-1 focus:ring-black cursor-pointer"
               name=""
               id=""
             >

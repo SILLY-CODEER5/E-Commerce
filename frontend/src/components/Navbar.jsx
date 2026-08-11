@@ -1,23 +1,32 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useRef } from "react";
 import { assets } from "../assets/assets";
-import { NavLink, Link, useLocation } from "react-router-dom";
-import { ShopContext } from "../context/ShopContext";
+import { NavLink, Link, useLocation, useNavigate } from "react-router-dom";
+import useShopStore from "../store/useShopStore";
 import { toast } from "react-toastify";
 
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
   const {
+    showSearch,
     setShowSearch,
+    search,
+    setSearch,
     getCartCount,
-    navigate,
     token,
     setToken,
     setCartItems,
-  } = useContext(ShopContext);
+    userData,
+  } = useShopStore();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const searchInputRef = useRef(null);
 
   const handleSearchClick = () => {
     navigate("/collection");
     setShowSearch(true);
+    setTimeout(() => {
+      searchInputRef.current?.focus();
+    }, 100);
   };
 
   const logout = () => {
@@ -31,7 +40,7 @@ const Navbar = () => {
   return (
     <div
       className="flex items-center justify-between py-5
- font-medium md:sticky md:top-0 bg-white z-10"
+ font-medium md:sticky md:top-0 bg-white z-50"
     >
       <Link to="/">
         <img src={assets.logo} className="w-36" alt="" />
@@ -40,61 +49,78 @@ const Navbar = () => {
       <ul className="hidden sm:flex gap-5 text-sm text-gray-700">
         <NavLink to="/" className="flex flex-col items-center gap-1">
           <p>HOME</p>
-          <hr className="w-2/4 border-none h-[2px] bg-gray-700 hidden" />
+          <hr className="w-2/4 border-none h-[2px] bg-gray-700 opacity-0 transition-opacity" />
         </NavLink>
         <NavLink to="/collection" className="flex flex-col items-center gap-1">
           <p>COLLECTION</p>
-          <hr className="w-2/4 border-none h-[2px] bg-gray-700 hidden" />
+          <hr className="w-2/4 border-none h-[2px] bg-gray-700 opacity-0 transition-opacity" />
         </NavLink>
         <NavLink to="/about" className="flex flex-col items-center gap-1">
           <p>ABOUT</p>
-          <hr className="w-2/4 border-none h-[2px] bg-gray-700 hidden" />
+          <hr className="w-2/4 border-none h-[2px] bg-gray-700 opacity-0 transition-opacity" />
         </NavLink>
         <NavLink to="/contact" className="flex flex-col items-center gap-1">
           <p>CONTACT</p>
-          <hr className="w-2/4 border-none h-[2px] bg-gray-700 hidden" />
+          <hr className="w-2/4 border-none h-[2px] bg-gray-700 opacity-0 transition-opacity" />
         </NavLink>
       </ul>
 
       <div className="flex items-center gap-6">
-        <div className="w-5">
+        <div className="relative w-5 h-5 flex items-center justify-end">
           <img
             onClick={handleSearchClick}
             src={assets.search_icon}
-            className={` cursor-pointer`}
+            className={`w-5 cursor-pointer ${showSearch && location.pathname.includes('collection') ? 'hidden' : 'block'}`}
             alt=""
           />
+          <div className={`absolute right-0 flex items-center bg-white border border-gray-400 rounded-full py-2 transition-all duration-300 ease-in-out z-50 ${showSearch && location.pathname.includes('collection') ? 'w-[65vw] sm:w-72 md:w-96 opacity-100 px-5' : 'w-0 border-transparent opacity-0 px-0 pointer-events-none'}`}>
+             <input
+                ref={searchInputRef}
+                type="text"
+                placeholder="Search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full outline-none bg-transparent text-base"
+             />
+             <img 
+               onClick={() => {
+                 setShowSearch(false);
+                 setSearch("");
+               }}
+               src={assets.cross_icon} 
+               className="w-3 cursor-pointer flex-shrink-0 ml-2" 
+               alt="" 
+             />
+          </div>
         </div>
-        <div className="group relative">
-          <img
-            onClick={() => (token ? null : navigate("/login"))}
-            src={assets.profile_icon}
-            alt=""
-            className="w-5 cursor-pointer"
-          />
-          {token && (
-            <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4">
-              <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded">
-                <p className="cursor-pointer hover:text-black">My Profile</p>
-                <p
-                  onClick={() => navigate("/orders")}
-                  className="cursor-pointer hover:text-black"
-                >
-                  Orders
-                </p>
-                <p onClick={logout} className="cursor-pointer hover:text-black">
-                  Logout
-                </p>
-              </div>
-            </div>
-          )}
-        </div>
-        <Link to="/cart" className="relative">
+        <Link 
+          to="/cart" 
+          className={`relative p-2 rounded-full transition-all ${location.pathname === '/cart' ? 'bg-gray-200 scale-110' : 'hover:bg-gray-100 hover:scale-110'}`}
+        >
           <img src={assets.cart_icon} className="w-5 min-w-5" alt="" />
           <p className="absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-xs">
             {getCartCount()}
           </p>
         </Link>
+        {token && userData?.avatar ? (
+          <div className={`rounded-full transition-all overflow-hidden flex items-center justify-center ${location.pathname === '/profile' ? 'ring-2 ring-gray-200 scale-110' : 'hover:ring-2 hover:ring-gray-100 hover:scale-110'}`}>
+            <img
+              onClick={() => navigate("/profile")}
+              src={userData.avatar}
+              alt="Profile"
+              className="w-9 h-9 object-cover cursor-pointer"
+            />
+          </div>
+        ) : (
+          <div className={`p-2 rounded-full transition-all flex items-center justify-center ${location.pathname === '/profile' ? 'bg-gray-200 scale-110' : 'hover:bg-gray-100 hover:scale-110'}`}>
+            <img
+              onClick={() => (token ? navigate("/profile") : navigate("/login"))}
+              src={assets.profile_icon}
+              alt="Profile"
+              className="w-5 cursor-pointer"
+            />
+          </div>
+        )}
         <img
           onClick={() => setVisible(true)}
           src={assets.menu_icon}
