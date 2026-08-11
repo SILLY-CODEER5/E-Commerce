@@ -42,11 +42,11 @@ const Navbar = () => {
       className="flex items-center justify-between py-5
  font-medium md:sticky md:top-0 bg-white z-50"
     >
-      <Link to="/">
-        <img src={assets.logo} className="w-36" alt="" />
+      <Link to="/" aria-label="Home">
+        <img src={assets.logo} className="w-36" alt="Forever Logo" />
       </Link>
 
-      <ul className="hidden sm:flex gap-5 text-sm text-gray-700">
+      <nav className="hidden sm:flex gap-5 text-sm text-gray-700" aria-label="Main Navigation">
         <NavLink to="/" className="flex flex-col items-center gap-1">
           <p>HOME</p>
           <hr className="w-2/4 border-none h-[2px] bg-gray-700 opacity-0 transition-opacity" />
@@ -63,7 +63,7 @@ const Navbar = () => {
           <p>CONTACT</p>
           <hr className="w-2/4 border-none h-[2px] bg-gray-700 opacity-0 transition-opacity" />
         </NavLink>
-      </ul>
+      </nav>
 
       <div className="flex items-center gap-6">
         <div className="relative w-5 h-5 flex items-center justify-end">
@@ -71,7 +71,9 @@ const Navbar = () => {
             onClick={handleSearchClick}
             src={assets.search_icon}
             className={`w-5 cursor-pointer ${showSearch && location.pathname.includes('collection') ? 'hidden' : 'block'}`}
-            alt=""
+            alt="Search"
+            aria-label="Search"
+            role="button"
           />
           <div className={`absolute right-0 flex items-center bg-white border border-gray-400 rounded-full py-2 transition-all duration-300 ease-in-out z-50 ${showSearch && location.pathname.includes('collection') ? 'w-[65vw] sm:w-72 md:w-96 opacity-100 px-5' : 'w-0 border-transparent opacity-0 px-0 pointer-events-none'}`}>
              <input
@@ -95,9 +97,10 @@ const Navbar = () => {
         </div>
         <Link 
           to="/cart" 
-          className={`relative p-2 rounded-full transition-all ${location.pathname === '/cart' ? 'bg-gray-200 scale-110' : 'hover:bg-gray-100 hover:scale-110'}`}
+          aria-label="View Cart"
+          className={`relative p-2 rounded-full transition-all flex items-center justify-center ${location.pathname === '/cart' ? 'bg-gray-200 scale-110' : 'hover:bg-gray-100 hover:scale-110'}`}
         >
-          <img src={assets.cart_icon} className="w-5 min-w-5" alt="" />
+          <img src={assets.cart_icon} className="w-5 min-w-5" alt="Cart" />
           <p className="absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-xs">
             {getCartCount()}
           </p>
@@ -121,12 +124,17 @@ const Navbar = () => {
             />
           </div>
         )}
-        <img
+        <button
           onClick={() => setVisible(true)}
-          src={assets.menu_icon}
-          className="w-5 cursor-pointer sm:hidden"
-          alt=""
-        />
+          className="p-2 sm:hidden hover:bg-gray-100 rounded-full"
+          aria-label="Open Menu"
+        >
+          <img
+            src={assets.menu_icon}
+            className="w-5 cursor-pointer"
+            alt="Menu"
+          />
+        </button>
       </div>
 
       {/* Sidebar menu for small screens */}
