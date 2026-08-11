@@ -130,6 +130,8 @@ const useShopStore = create((set, get) => ({
       );
       if (response.data.success) {
         set({ cartItems: response.data.cartData });
+      } else {
+        get().setToken("");
       }
     } catch (error) {
       console.log(error);
@@ -149,6 +151,9 @@ const useShopStore = create((set, get) => ({
       );
       if (response.data.success) {
         set({ userData: response.data.user });
+      } else {
+        toast.error(response.data.msg);
+        get().setToken("");
       }
     } catch (error) {
       console.log(error);
