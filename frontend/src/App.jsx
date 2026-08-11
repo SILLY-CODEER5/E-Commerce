@@ -1,6 +1,6 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import React, { Suspense } from "react";
-const Home = React.lazy(() => import("./pages/Home"));
+import Home from "./pages/Home";
 const Collection = React.lazy(() => import("./pages/Collection"));
 const About = React.lazy(() => import("./pages/About"));
 const Contact = React.lazy(() => import("./pages/Contact"));

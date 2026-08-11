@@ -43,7 +43,7 @@ const Navbar = () => {
  font-medium md:sticky md:top-0 bg-white z-50"
     >
       <Link to="/" aria-label="Home">
-        <img src={assets.logo} className="w-36" alt="Forever Logo" width="144" height="36" />
+        <img src={assets.logo} className="w-36 aspect-[4/1]" alt="Forever Logo" width="144" height="36" />
       </Link>
 
       <nav className="hidden sm:flex gap-5 text-sm text-gray-700" aria-label="Main Navigation">

@@ -15,7 +15,7 @@ const ProductItem = ({ id, image, name, price }) => {
 
   const mainSrc = getOptimizedUrl(image[0], 400);
   const srcSet = image[0] && image[0].includes('cloudinary.com')
-    ? `${getOptimizedUrl(image[0], 200)} 200w, ${getOptimizedUrl(image[0], 400)} 400w, ${getOptimizedUrl(image[0], 800)} 800w`
+    ? `${getOptimizedUrl(image[0], 250)} 250w, ${getOptimizedUrl(image[0], 350)} 350w, ${getOptimizedUrl(image[0], 500)} 500w, ${getOptimizedUrl(image[0], 800)} 800w`
     : undefined;
 
   return (
