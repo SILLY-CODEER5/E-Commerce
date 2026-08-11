@@ -23,10 +23,15 @@ const Hero = () => {
 
       {/* Hero right side */}
       <div className="w-full sm:w-1/2 min-h-[400px] sm:min-h-0 relative">
-        <div 
-          className="absolute -inset-1 bg-cover bg-center"
-          style={{ backgroundImage: `url(${assets.hero_img})` }}
-        ></div>
+        <img 
+          src={assets.hero_img}
+          alt="Latest Arrivals Hero"
+          className="absolute -inset-1 w-[calc(100%+8px)] h-[calc(100%+8px)] object-cover"
+          fetchpriority="high"
+          decoding="sync"
+          width="800"
+          height="800"
+        />
       </div>
     </div>
   );
