@@ -39,8 +39,7 @@ const Navbar = () => {
 
   return (
     <div
-      className="flex items-center justify-between py-5
- font-medium md:sticky md:top-0 bg-white z-50"
+      className="flex items-center justify-between py-5 font-medium md:sticky md:top-0 bg-white z-50 relative"
     >
       <Link to="/" aria-label="Home">
         <img src={assets.logo} className="w-36 aspect-[4/1]" alt="Forever Logo" width="144" height="36" />
@@ -66,7 +65,7 @@ const Navbar = () => {
       </nav>
 
       <div className="flex items-center gap-6">
-        <div className="relative w-5 h-5 flex items-center justify-end">
+        <div className="w-5 h-5 flex items-center justify-end">
           <img
             onClick={handleSearchClick}
             src={assets.search_icon}
@@ -75,7 +74,7 @@ const Navbar = () => {
             aria-label="Search"
             role="button"
           />
-          <div className={`absolute right-0 flex items-center bg-white border border-gray-400 rounded-full py-2 transition-all duration-300 ease-in-out z-50 ${showSearch && location.pathname.includes('collection') ? 'w-[65vw] sm:w-72 md:w-96 opacity-100 px-5' : 'w-0 border-transparent opacity-0 px-0 pointer-events-none'}`}>
+          <div className={`absolute right-0 top-1/2 -translate-y-1/2 flex items-center bg-white border border-gray-400 rounded-full py-2 transition-all duration-300 ease-in-out z-50 ${showSearch && location.pathname.includes('collection') ? 'w-[100%] sm:w-[300px] md:w-[400px] opacity-100 px-5' : 'w-0 border-transparent opacity-0 px-0 pointer-events-none'}`}>
              <input
                 ref={searchInputRef}
                 type="text"
