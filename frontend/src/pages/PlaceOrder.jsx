@@ -109,8 +109,25 @@ const PlaceOrder = () => {
       className="flex flex-col border-t sm:flex-row justify-between gap-4 pt-5 sm:pt-14 min-h-[80vh] "
     >
       <div className="flex flex-col gap-4 w-full sm:max-w-[480px]">
-        <div className="text-xl sm:text-2xl my-3">
+        <div className="flex justify-between items-center text-xl sm:text-2xl my-3">
           <Title text1={"DELIVERY"} text2={"INFORMATION"} />
+          <button 
+            type="button"
+            onClick={() => setFormData({
+              firstName: "John",
+              lastName: "Doe",
+              email: "johndoe@example.com",
+              street: "123 Main St",
+              city: "New York",
+              state: "NY",
+              zipcode: "10001",
+              country: "USA",
+              phone: "1234567890",
+            })}
+            className="text-xs sm:text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-md border border-gray-300 transition-colors"
+          >
+            Auto-fill
+          </button>
         </div>
 
         <div className="flex gap-3">
