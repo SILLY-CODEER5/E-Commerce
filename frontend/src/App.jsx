@@ -1,5 +1,5 @@
 import { Routes, Route, useLocation } from "react-router-dom";
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import Home from "./pages/Home";
 const Collection = React.lazy(() => import("./pages/Collection"));
 const About = React.lazy(() => import("./pages/About"));
@@ -18,7 +18,7 @@ import "react-toastify/dist/ReactToastify.css";
 import ScrollToTop from "./components/ScrollToTop";
 import Loading from "./components/Loading";
 import useShopStore from "./store/useShopStore";
-import { useEffect } from "react";
+import MobileBottomNav from "./components/MobileBottomNav";
 
 const App = () => {
   const { fetchData, getUserCart, fetchUserProfile, token, setToken } = useShopStore();
@@ -36,7 +36,7 @@ const App = () => {
   }, [token, getUserCart, fetchUserProfile]);
 
   return (
-    <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
+    <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] pb-16 sm:pb-0">
       <ToastContainer autoClose={800} limit={3} />
       <Navbar />
       <ScrollToTop />
@@ -58,6 +58,7 @@ const App = () => {
         </Suspense>
       </main>
       {location.pathname !== '/cart' && <Footer />}
+      <MobileBottomNav />
     </div>
   );
 };

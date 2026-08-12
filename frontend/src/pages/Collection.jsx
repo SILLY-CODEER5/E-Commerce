@@ -6,7 +6,7 @@ import ProductItem from "../components/ProductItem.jsx";
 const Collection = () => {
   // states
   const { products, search, showSearch, currency } = useShopStore();
-  const [showFilter, setShowFilter] = useState(true);
+  const [showFilter, setShowFilter] = useState(false);
   const [filterProducts, setFilterProducts] = useState([]);
   const [Category, setCategory] = useState([]);
   const [SubCategory, setSubCategory] = useState([]);
@@ -74,20 +74,38 @@ const Collection = () => {
   return (
     <div className="flex flex-col sm:flex-row gap-1 border-t sm:gap-10 pt-10">
       {/* Filter Options */}
-      <div className="min-w-60 sm:sticky sm:top-24 h-fit bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-        <div 
-          onClick={() => setShowFilter(!showFilter)}
-          className="my-2 flex items-center justify-between cursor-pointer group"
-        >
-          <p className="text-xl font-bold tracking-tight text-gray-900 group-hover:text-black transition-colors">FILTERS</p>
-          <img
-            className={`h-4 sm:hidden ${showFilter ? "rotate-90" : ""} transition-transform duration-300 ease-in-out opacity-60`}
-            src={assets.dropdown_icon}
-            alt=""
-          />
+      <div className="min-w-60 sm:sticky sm:top-24 h-fit bg-white sm:p-6 sm:rounded-2xl sm:shadow-sm sm:border sm:border-gray-100">
+        <div className="hidden sm:block my-2">
+          <p className="text-xl font-bold tracking-tight text-gray-900 transition-colors">FILTERS</p>
         </div>
 
-        <div className={`transition-all duration-300 ease-in-out ${showFilter ? "opacity-100 max-h-[1000px] mt-6" : "opacity-0 max-h-0 overflow-hidden sm:opacity-100 sm:max-h-[1000px] sm:mt-6 sm:overflow-visible"}`}>
+        {/* Mobile Backdrop */}
+        {showFilter && (
+          <div 
+            onClick={() => setShowFilter(false)} 
+            className="fixed inset-0 bg-black/40 z-[90] sm:hidden backdrop-blur-sm transition-opacity duration-300"
+          ></div>
+        )}
+
+        <div className={`
+          fixed bottom-0 left-0 right-0 z-[100] bg-white p-6 pb-12 rounded-t-3xl max-h-[85vh] overflow-y-auto shadow-2xl transition-transform duration-300 ease-in-out
+          sm:static sm:bg-transparent sm:p-0 sm:pb-0 sm:rounded-none sm:max-h-none sm:overflow-visible sm:shadow-none sm:transform-none sm:mt-6
+          ${showFilter ? 'translate-y-0' : 'translate-y-full sm:translate-y-0'}
+        `}>
+          {/* Mobile Drag Handle & Header */}
+          <div className="flex flex-col items-center mb-6 sm:hidden">
+            <div className="w-12 h-1.5 bg-gray-300 rounded-full mb-4"></div>
+            <div className="w-full flex justify-between items-center">
+              <p className="text-xl font-bold text-gray-900">Filters</p>
+              <img 
+                 onClick={() => setShowFilter(false)} 
+                 src={assets.cross_icon} 
+                 className="w-4 cursor-pointer p-1 opacity-60 hover:opacity-100" 
+                 alt="Close" 
+              />
+            </div>
+          </div>
+
           {/* Category Filter */}
           <div className="pb-6 border-b border-gray-100">
             <p className="mb-4 text-sm font-semibold text-gray-800 tracking-wide">CATEGORIES</p>
@@ -157,28 +175,46 @@ const Collection = () => {
             />
           </div>
           
-          {/* Clear Filters Button */}
-          {(Category.length > 0 || SubCategory.length > 0 || maxPrice < 1000 || sortType !== "relevant") && (
+          {/* Action Buttons */}
+          <div className="mt-4 flex flex-col gap-3">
             <button
-              onClick={() => {
-                setCategory([]);
-                setSubCategory([]);
-                setMaxPrice(1000);
-                setSortType("relevant");
-              }}
-              className="mt-2 w-full text-sm font-semibold bg-red-50 text-red-600 border border-red-100 py-3 rounded-lg hover:bg-red-500 hover:text-white transition-all duration-300 shadow-sm"
+              onClick={() => setShowFilter(false)}
+              className="w-full text-sm font-bold bg-black text-white py-3.5 rounded-lg shadow-md hover:bg-gray-800 transition-all duration-300 sm:hidden"
             >
-              CLEAR ALL FILTERS
+              APPLY FILTERS
             </button>
-          )}
+
+            {(Category.length > 0 || SubCategory.length > 0 || maxPrice < 1000 || sortType !== "relevant") && (
+              <button
+                onClick={() => {
+                  setCategory([]);
+                  setSubCategory([]);
+                  setMaxPrice(1000);
+                  setSortType("relevant");
+                }}
+                className="w-full text-sm font-semibold bg-red-50 text-red-600 border border-red-100 py-3 rounded-lg hover:bg-red-500 hover:text-white transition-all duration-300 shadow-sm"
+              >
+                CLEAR ALL
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
       {/* Right Side */}
 
       <div className="flex-1 ">
-        <div className="flex justify-between text-base sm:text-2xl mb-4">
+        <div className="flex justify-between items-center text-base sm:text-2xl mb-4">
           <Title text1={"ALL"} text2={"COLLECTIONS"} />
+          
+          {/* Mobile Filter Toggle */}
+          <div 
+            onClick={() => setShowFilter(true)}
+            className="flex items-center gap-1.5 cursor-pointer sm:hidden mb-3 active:opacity-70"
+          >
+            <p className="text-[11px] font-bold tracking-wider text-gray-800">FILTERS</p>
+            <img className="h-2 opacity-60" src={assets.dropdown_icon} alt="" />
+          </div>
         </div>
 
         {showSearch && search && (
