@@ -10,6 +10,8 @@ const PlaceOrder = React.lazy(() => import("./pages/PlaceOrder"));
 const Orders = React.lazy(() => import("./pages/Orders"));
 const VerifyPayment = React.lazy(() => import("./pages/VerifyPayment"));
 const Profile = React.lazy(() => import("./pages/Profile"));
+const Delivery = React.lazy(() => import("./pages/Delivery"));
+const PrivacyPolicy = React.lazy(() => import("./pages/PrivacyPolicy"));
 import Navbar from "./components/Navbar";
 const Cart = React.lazy(() => import("./pages/Cart"));
 import Footer from "./components/Footer";
@@ -54,6 +56,8 @@ const App = () => {
             <Route path="/orders" element={<Orders />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/verify-payment" element={<VerifyPayment />} />
+            <Route path="/delivery" element={<Delivery />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
           </Routes>
         </Suspense>
       </main>

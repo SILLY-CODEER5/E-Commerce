@@ -1,5 +1,6 @@
 import React from "react";
 import { assets } from "../assets/assets";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
 
@@ -9,21 +10,20 @@ const Footer = () => {
         <div>
           <img src={assets.logo} className="mb-5 w-32 aspect-[4/1]" alt="Forever Logo" width="128" height="32" />
           <p className="w-full md:w-2/3 text-gray-700">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus,
-            quam. Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Voluptatum, magni minus! Labore totam placeat minima, ab optio eius
-            delectus cupiditate, similique quos quibusdam, aut iusto. Aperiam,
-            cupiditate. Et, mollitia odio.
+            Forever is your ultimate destination for modern clothing and accessories. 
+            We are dedicated to bringing you the best in fashion with a focus on quality, 
+            customer service, and uniqueness. Elevate your everyday style with our curated collections.
           </p>
         </div>
 
         <div>
           <p className="text-xl font-medium mb-5">COMPANY</p>
           <ul className="flex flex-col gap-1 text-gray-700">
-            <li>Home</li>
-            <li>About Us</li>
-            <li>Delivery</li>
-            <li>Privacy Policy</li>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/about">About Us</Link></li>
+            <li><Link to="/contact">Contact Us</Link></li>
+            <li><Link to="/delivery">Delivery</Link></li>
+            <li><Link to="/privacy">Privacy Policy</Link></li>
           </ul>
         </div>
 

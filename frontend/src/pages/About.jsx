@@ -24,10 +24,10 @@ const About = () => {
           <div className="space-y-4">
             <h3 className="text-2xl font-semibold text-gray-900 tracking-tight">Our Story</h3>
             <p className="text-base leading-relaxed text-gray-600">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto,
-              voluptatibus explicabo natus sequi nostrum officia cum modi
-              voluptas? Modi ea nesciunt amet, numquam non quidem obcaecati alias
-              mollitia sed provident.
+              Forever was born out of a passion for accessible, modern fashion. 
+              Our journey started with a simple idea: to provide stylish, high-quality clothing 
+              that empowers individuals to express their unique personalities. Today, we continue 
+              to curate pieces that inspire confidence and elevate everyday wardrobes.
             </p>
           </div>
           
@@ -36,10 +36,9 @@ const About = () => {
           <div className="space-y-4">
             <h3 className="text-2xl font-semibold text-gray-900 tracking-tight">Our Mission</h3>
             <p className="text-base leading-relaxed text-gray-600">
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Facilis
-              mollitia esse libero expedita. Recusandae placeat voluptas
-              reiciendis, doloremque ab ut fugit aliquid, velit possimus natus
-              eveniet sequi omnis at. Cupiditate.
+              Our mission is to make premium fashion accessible to everyone. We are committed to 
+              sustainable practices, exceptional craftsmanship, and providing a seamless shopping 
+              experience. We strive to be the go-to destination for modern clothing and accessories.
             </p>
           </div>
         </div>
@@ -58,9 +57,7 @@ const About = () => {
             </div>
             <b className="text-xl text-gray-900 tracking-tight">Quality Assurance</b>
             <p className="text-gray-500 leading-relaxed text-sm">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Dignissimos, autem tempore! Expedita at, temporibus aliquam
-              perferendis adipisci.
+              Every item in our collection undergoes rigorous quality checks to ensure it meets our high standards for durability, comfort, and style.
             </p>
           </div>
           
@@ -70,9 +67,7 @@ const About = () => {
             </div>
             <b className="text-xl text-gray-900 tracking-tight">Convenience</b>
             <p className="text-gray-500 leading-relaxed text-sm">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Dignissimos, autem tempore! Expedita at, temporibus aliquam
-              perferendis adipisci.
+              We offer a seamless online shopping experience with intuitive navigation, secure payment options, and fast shipping right to your door.
             </p>
           </div>
           
@@ -82,9 +77,7 @@ const About = () => {
             </div>
             <b className="text-xl text-gray-900 tracking-tight">Exceptional Service</b>
             <p className="text-gray-500 leading-relaxed text-sm">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Dignissimos, autem tempore! Expedita at, temporibus aliquam
-              perferendis adipisci.
+              Our dedicated support team is always ready to assist you with any questions or concerns, ensuring a satisfying shopping journey from start to finish.
             </p>
           </div>
         </div>
