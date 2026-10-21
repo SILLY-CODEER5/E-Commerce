@@ -1,82 +1,99 @@
-# 🛒 Forever - Full-Stack E-Commerce Platform
+# Forever — E-Commerce Platform & CMS
 
-![MERN Stack](https://img.shields.io/badge/MERN-Stack-blue?style=for-the-badge&logo=mongodb)
-![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![Tailwind](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![Zustand](https://img.shields.io/badge/Zustand-Bear-orange?style=for-the-badge)
+[![React](https://img.shields.io/badge/React_19-20232A?style=flat-square&logo=react&logoColor=61DAFB)](https://react.dev/)
+[![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Express](https://img.shields.io/badge/Express_5-000000?style=flat-square&logo=express&logoColor=white)](https://expressjs.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat-square&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![Zustand](https://img.shields.io/badge/Zustand_5-443e38?style=flat-square&logo=zustand&logoColor=white)](https://zustand-demo.pmnd.rs/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Stripe](https://img.shields.io/badge/Stripe_API-635BFF?style=flat-square&logo=stripe&logoColor=white)](https://stripe.com/)
+[![Vitest](https://img.shields.io/badge/Vitest-6E9F18?style=flat-square&logo=vitest&logoColor=white)](https://vitest.dev/)
 
-A production-ready, full-stack E-Commerce application built from the ground up using the **MERN** stack (MongoDB, Express, React, Node.js). 
-
-This project was built to demonstrate a comprehensive understanding of modern web architecture, including a consumer-facing storefront, a secure RESTful API, and a dedicated admin Content Management System (CMS). It strongly emphasizes **performance optimization**, **clean code principles**, and **scalable state management**, making it a robust showcase of my full-stack capabilities as a developer.
-
----
-
-## 🌟 Live Demos & Testing
-
-- **Frontend Store:** [https://forever-frontend-xi-beryl.vercel.app/](https://forever-frontend-xi-beryl.vercel.app/)
-- **Admin Panel:** [https://forever-admin-pi-pink.vercel.app/](https://forever-admin-pi-pink.vercel.app/)
-
-> [!TIP]
-> **Recruiter Testing Credentials:**
-> You can log into both the **Frontend** and the **Admin Panel** using the following test account:
-> - **Email:** `admin@forever.com`
-> - **Password:** `12345678`
+A full-stack e-commerce system featuring a customer-facing storefront, a dedicated administrative Content Management System (CMS), and a RESTful API with Stripe payments, in-memory catalog caching, and automated cloud asset lifecycle management.
 
 ---
 
-## 🏗️ System Architecture
+## Live Deployments
 
-The application follows a decoupled client-server architecture, divided into three main micro-apps:
+| Service | URL |
+| :--- | :--- |
+| **Storefront** | [forever-frontend-xi-beryl.vercel.app](https://forever-frontend-xi-beryl.vercel.app/) |
+| **Admin CMS** | [forever-admin-pi-pink.vercel.app](https://forever-admin-pi-pink.vercel.app/) |
+
+> **Demo Credentials (Storefront & Admin CMS):**  
+> **Email:** `admin@forever.com` | **Password:** `12345678`
+
+> 📖 **Recruiter & Interview Guide:** Looking for modular resume bullet points, ATS keywords, or technical interview Q&A? See [`RESUME_AND_INTERVIEW_GUIDE.md`](./RESUME_AND_INTERVIEW_GUIDE.md).
+
+---
+
+## System Architecture
 
 ```mermaid
 graph TD
-    Client[Storefront UI <br> React + Zustand] <-->|JSON over HTTP| API(Express API Server)
-    Admin[Admin CMS <br> React] <-->|JSON over HTTP + JWT| API
+    Client["Storefront UI<br>(React 19 + Zustand)"] -->|REST / JSON| API["API Server<br>(Express 5 + Node.js)"]
+    Admin["Admin CMS<br>(React 19 + Vite)"] -->|REST / JWT| API
     
-    API <-->|Mongoose ODM| DB[(MongoDB)]
-    API <-->|Image Upload/Delete| Cloudinary((Cloudinary))
-    API <-->|Checkout Sessions| Stripe((Stripe API))
+    API <--> DB[("MongoDB<br>(Mongoose ODM)")]
+    API <--> Cloudinary[("Cloudinary<br>(Media Storage)")]
+    API <--> Stripe[("Stripe API<br>(Checkout Sessions)")]
 ```
 
-### 1. Frontend (Customer Storefront)
-Built with **React.js** and **Vite** for lightning-fast HMR and optimized builds.
-- **State Management:** Utilizes **Zustand** (`useShopStore.js`) for lightweight, predictable, and boilerplate-free global state management (handling carts, user sessions, and product data).
-- **Styling:** **Tailwind CSS** for a fully responsive, mobile-first UI design.
-- **UX Features:** Real-time search, dynamic filtering, secure checkout flows, and toast notifications.
+---
 
-### 2. Backend (RESTful API)
-Built with **Node.js** and **Express.js**, serving as the central nervous system.
-- **Database Architecture:** **MongoDB** via **Mongoose**. Implements strict schemas for Users, Products, and Orders.
-- **Authentication:** Custom **JWT-based** stateless authentication with bcrypt password hashing.
-- **Media Storage:** Deeply integrated with **Cloudinary**. Includes automated memory management (e.g., when a product is deleted from the DB, the server automatically hooks into the Cloudinary API to permanently delete the associated images to prevent cloud storage leaks).
-- **Payments:** Integrated with **Stripe** checkout sessions and webhook verification for secure transaction handling.
+## Technical Highlights
 
-### 3. Admin Panel (CMS)
-A secure, restricted dashboard for inventory management.
-- **Product Management:** Full CRUD capabilities with support for `multipart/form-data` image uploads via **Multer**.
-- **Order Management:** View real-time customer orders and update shipping statuses dynamically.
+* **In-Memory Caching & HTTP Cache Control:** The `/api/v1/products/list` endpoint leverages `node-cache` to store the catalog in RAM and returns `Cache-Control: public, max-age=60` headers, eliminating redundant database queries on repeated traffic.
+* **B-Tree Indexing & Lean Queries:** Heavily queried fields (`category`, `subCategory`, `userId`, `metadata.stripeSessionId`) use explicit single-field indexes for $O(\log N)$ lookups. Read-only requests utilize Mongoose `.lean()` to bypass document hydration and minimize memory overhead.
+* **Idempotent Stripe Checkout Pipeline:** Webhook/session verification utilizes atomic MongoDB upsert operations (`findOneAndUpdate` with `$setOnInsert`) on unique Stripe session IDs, ensuring transactions cannot be processed twice.
+* **N+1 Query Elimination:** The order verification engine deduplicates cart product IDs and resolves them in a single MongoDB `$in` batch query paired with an in-memory `Map` lookup.
+* **Automated Cloud Asset Cleanup:** Product deletion triggers automated Cloudinary asset deletion (`cloudinary.uploader.destroy`), preventing orphaned images and cloud storage leaks.
+* **Predictable Global State with Test Coverage:** Cart multi-variant sizing and user sessions are managed via **Zustand**, backed by unit tests written in **Vitest**.
 
 ---
 
-## 🚀 Performance Optimizations
+## Repository Structure
 
-As a developer, I prioritize not just making things work, but making them fast and scalable. Here are the architectural optimizations implemented in this project:
-
-- **Database Indexing:** Added MongoDB indexes (`index: true`) to heavily queried fields (like `category`, `subCategory`, `userId`, and `stripeSessionId`) changing query time complexity from O(N) collection scans to O(log N).
-- **In-Memory Caching:** Introduced server-side caching using `node-cache`. The heavily requested `/api/products` endpoint caches the entire catalog in RAM, bypassing the database entirely for subsequent requests to drastically reduce TTFB (Time To First Byte).
-- **Lean Queries:** Replaced standard Mongoose queries with `.lean()` execution. By skipping the hydration of heavy Mongoose document instances for read-only API requests, server memory footprint was reduced by up to 5x.
-- **Automated Data Seeding:** Developed a robust `resetDB.js` Node script that automates the wiping and re-seeding of MongoDB and Cloudinary, ensuring a reproducible development environment.
+```text
+E-Commerce/
+├── backend/            # Express 5 REST API & database models
+│   ├── config/         # MongoDB and Cloudinary configurations
+│   ├── controllers/    # Route controllers (Auth, Cart, Order, Product)
+│   ├── middlewares/    # JWT auth, Admin auth, Multer upload, Async handler
+│   ├── models/         # Mongoose schemas (User, Product, Order)
+│   ├── routes/         # Express API route modules (/api/v1/*)
+│   └── scripts/        # Database seed & reset scripts
+├── frontend/           # Customer storefront (React 19 + Vite + Tailwind 4)
+│   ├── src/components/ # Modular UI components
+│   ├── src/pages/      # Storefront pages (Collection, Cart, Orders, Checkout)
+│   └── src/store/      # Zustand global state store & Vitest test suites
+└── admin/              # Inventory & Order CMS dashboard (React 19 + Vite)
+    ├── src/components/ # Sidebar, Navbar, Admin auth guard
+    └── src/pages/      # Product creation, listing, and order management
+```
 
 ---
 
-## 💻 Local Development Setup
+## Tech Stack
 
-Want to run this locally? Follow these steps:
+| Domain | Technologies |
+| :--- | :--- |
+| **Frontend** | React 19, Vite 7, Tailwind CSS 4, Zustand 5, Axios, React Router 7 |
+| **Backend** | Node.js, Express 5, Mongoose 8, Bcrypt, JSON Web Tokens (JWT) |
+| **Database & Cloud** | MongoDB Atlas, Cloudinary Media SDK |
+| **Payments** | Stripe Checkout Sessions API |
+| **Testing & Tooling** | Vitest, JSDOM, ESLint, Nodemon, Compression |
+
+---
+
+## Getting Started
 
 ### Prerequisites
-- Node.js installed (`v18+` recommended)
-- MongoDB account (Atlas cluster)
-- Cloudinary and Stripe accounts (for API keys)
+* [Node.js](https://nodejs.org/) (v18 or higher)
+* [MongoDB](https://www.mongodb.com/) connection URI (Local or MongoDB Atlas)
+* [Cloudinary](https://cloudinary.com/) & [Stripe](https://stripe.com/) developer accounts
+
+---
 
 ### 1. Clone the Repository
 ```bash
@@ -84,53 +101,89 @@ git clone https://github.com/SILLY-CODEER5/E-Commerce.git
 cd E-Commerce
 ```
 
-### 2. Backend Setup
+---
+
+### 2. Backend Configuration & Setup
+
 ```bash
 cd backend
 npm install
 ```
-Create a `.env` file in the `backend` directory:
+
+Create a `.env` file in `backend/`:
 ```env
 PORT=4000
-MONGODB_URI=your_mongodb_uri
-JWT_SECRET=your_jwt_secret
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret_key
 ADMIN_EMAIL=admin@forever.com
 ADMIN_PASSWORD=12345678
 STRIPE_SECRET_KEY=your_stripe_secret_key
-CLOUDINARY_NAME=your_cloudinary_name
-CLOUDINARY_API_KEY=your_cloudinary_key
-CLOUDINARY_API_SECRET_KEY=your_cloudinary_secret
+CLOUDINARY_NAME=your_cloudinary_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET_KEY=your_cloudinary_api_secret
 ```
-Run the seed script to populate the database and start the server:
+
+*(Optional) Seed the database with sample inventory:*
 ```bash
 node scripts/resetDB.js
+```
+
+Start the backend server:
+```bash
 npm run server
 ```
 
+---
+
 ### 3. Frontend Setup
+
 ```bash
 cd ../frontend
 npm install
 ```
-Create a `.env` file in the `frontend` directory:
+
+Create a `.env` file in `frontend/`:
 ```env
 VITE_BACKEND_URL=http://localhost:4000
 ```
-Start the frontend app:
+
+Start the storefront development server:
 ```bash
 npm run dev
 ```
 
-### 4. Admin Panel Setup
+---
+
+### 4. Admin CMS Setup
+
 ```bash
 cd ../admin
 npm install
 ```
-Create a `.env` file in the `admin` directory:
+
+Create a `.env` file in `admin/`:
 ```env
 VITE_BACKEND_URL=http://localhost:4000
 ```
-Start the admin panel:
+
+Start the admin development server:
 ```bash
 npm run dev
 ```
+
+---
+
+## Running Tests
+
+Unit tests for the client-side state machine and cart calculations are implemented with **Vitest**:
+
+```bash
+cd frontend
+npx vitest run
+```
+
+---
+
+## License
+
+This project is licensed under the [ISC License](LICENSE).
